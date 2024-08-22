@@ -1,0 +1,38 @@
+{% extends "admin_base.html" %}
+
+{% block title %}Update Investment Category{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Update Investment Category</h2>
+    <form action="" method="POST">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.category.label(for="category") }}
+            {{ form.category(id="category", class="form-control") }}
+            {% if form.category.errors %}
+            <ul class="text-danger">
+                {% for error in form.category.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        <div class="form-group">
+            {{ form.description.label(for="description") }}
+            {{ form.description(id="description", class="form-control") }}
+            {% if form.description.errors %}
+            <ul class="text-danger">
+                {% for error in form.description.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        <div class="form-group">   
+            {{ form.submit(class="form-button-secondary btn-space") }}
+            <button type="button" class="form-button-secondary btn-space" onclick="window.location.href='{{ url_for('investment_dashboard') }}';">Cancel</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}Update User{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Update User</h2>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+
+        <div class="form-group">
+            {{ form.name.label(for="name") }}
+            {{ form.name(id="name", class="form-control", value=form.name.data) }}
+            {% if form.name.errors %}
+            <ul class="text-danger">
+                {% for error in form.name.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.email.label(for="email") }}
+            {{ form.email(id="email", class="form-control", value=form.email.data) }}
+            {% if form.email.errors %}
+            <ul class="text-danger">
+                {% for error in form.email.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.phone.label(for="phone") }}
+            {{ form.phone(id="phone", class="form-control", value=form.phone.data) }}
+            {% if form.phone.errors %}
+            <ul class="text-danger">
+                {% for error in form.phone.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.dob.label(for="dob") }}
+            <input type="date" id="dob" name="dob" class="form-control" value="{{ form.dob.data|default('') }}">
+            {% if form.dob.errors %}
+            <ul class="text-danger">
+                {% for error in form.dob.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.state.label(for="state") }}
+            {{ form.state(id="state", class="form-control", value=form.state.data) }}
+            {% if form.state.errors %}
+            <ul class="text-danger">
+                {% for error in form.state.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.city.label(for="city") }}
+            {{ form.city(id="city", class="form-control", value=form.city.data) }}
+            {% if form.city.errors %}
+            <ul class="text-danger">
+                {% for error in form.city.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.submit(class="form-button-secondary btn-space") }}
+            <a href="{{ url_for('admin_dashboard') }}" class="form-button-secondary btn-space">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

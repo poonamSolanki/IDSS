@@ -1,0 +1,96 @@
+{% extends "admin_base.html" %}
+
+{% block title %}Investment Management{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Investment Management</h2>
+    
+    <!-- Options for Investment Category and Subcategory -->
+    <div class="btn-group mb-4" role="group">
+        <button id="category-btn" class="btn btn-secondary btn-space">Investment Category</button>
+        <button id="subcategory-btn" class="btn btn-secondary btn-space">Investment Subcategory</button>
+    </div>
+
+    <!-- Investment Category Form -->
+    <div id="category-form" style="display:none;">
+        <h3>Add Investment Category</h3>
+        <form method="POST" action="{{ url_for('investment') }}">
+            {{ form.hidden_tag() }}
+
+            <div class="form-group">
+                {{ form.category.label(for="category", class="form-label") }}
+                {{ form.category(id="category", class="form-control") }}
+                {% if form.category.errors %}
+                    <ul class="text-danger">
+                        {% for error in form.category.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                {{ form.description.label(for="description", class="form-label") }}
+                {{ form.description(id="description", class="form-control") }}
+                {% if form.description.errors %}
+                    <ul class="text-danger">
+                        {% for error in form.description.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <div class="btn-group" role="group">
+                    <button type="submit" class="form-button-secondary btn-space green">Submit</button>
+                    <button type="reset" class="form-button-secondary btn-space red">Clear</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Investment Subcategory Form -->
+    <div id="subcategory-form" style="display:none;">
+        <h3>Add Investment Subcategory</h3>
+        <form method="POST" action="{{ url_for('investment') }}">
+            <div class="form-group">
+                <label for="investment-category" class="form-label">Select Investment Category</label>
+                <select id="investment-category" name="investment_category" class="form-control">
+                    {% for category in categories %}
+                        <option value="{{ category.id }}">{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="subcategory" class="form-label">Investment Subcategory</label>
+                <input type="text" id="subcategory" name="subcategory" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="subdescription" class="form-label">Description</label>
+                <textarea id="subdescription" name="subdescription" class="form-control"></textarea>
+            </div>
+            <div class="form-group">
+                <div class="btn-group" role="group">
+                    <button type="submit" class="form-button-secondary btn-space green">Submit</button>
+                    <button type="reset" class="form-button-secondary btn-space red">Clear</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // JavaScript to toggle visibility of forms based on button clicks
+    document.getElementById('category-btn').addEventListener('click', function() {
+        document.getElementById('category-form').style.display = 'block';
+        document.getElementById('subcategory-form').style.display = 'none';
+    });
+
+    document.getElementById('subcategory-btn').addEventListener('click', function() {
+        document.getElementById('subcategory-form').style.display = 'block';
+        document.getElementById('category-form').style.display = 'none';
+    });
+</script>
+{% endblock %}

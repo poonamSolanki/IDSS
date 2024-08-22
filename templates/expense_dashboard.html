@@ -1,0 +1,88 @@
+<!-- templates/expense_dashboard.html -->
+{% extends "admin_base.html" %}
+
+{% block title %}Expense Dashboard{% endblock %}
+
+{% block content %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-messages">
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+<div class="container shifted-content">
+    <h2>Expense Dashboard</h2>
+
+    <!-- Options -->
+    <div class="button-group mt-4">
+        <a href="{{ url_for('add_expense_type') }}" class="form-button-secondary btn-space">Add Expense Type</a>
+        <a href="{{ url_for('add_expense_factors') }}" class="form-button-secondary btn-space">Add Expense Factors</a>
+        <a href="{{ url_for('add_expense') }}" class="form-button-secondary btn-space">Add Expense</a>
+        <a href="{{ url_for('admin_dashboard') }}" class="form-button-secondary btn-space">Go to Admin Dashboard</a>
+    </div>
+
+    <!-- Display expense types in a table -->
+    <h3>Expense Type</h3>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for expense in expense_type %}
+            <tr>
+                <td>{{ expense[1] }}</td> <!-- Expense Type Title -->
+                <td>{{ expense[2] }}</td> <!-- Expense Type Description -->
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Display expense factors in a table -->
+    <h3>Expense Factors</h3>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Factor Name</th>
+                <th>Factor Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for factor in expense_factors %}
+            <tr>
+                <td>{{ factor[1] }}</td> <!-- Factor Name -->
+                <td>{{ factor[2] }}</td> <!-- Factor Description -->
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Display expenses in a table -->
+    <h3>Expenses</h3>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Expense Type Title</th>
+                <th>Factor Name</th>
+                <th>Expense Title</th>
+                <th>Expense Detail</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for expense in expenses %}
+            <tr>
+                <td>{{ expense[1] }}</td> <!-- Expense Type Title -->
+                <td>{{ expense[2] }}</td> <!-- Factor Name -->
+                <td>{{ expense[3] }}</td> <!-- Expense Title -->
+                <td>{{ expense[4] }}</td> <!-- Expense Detail -->
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

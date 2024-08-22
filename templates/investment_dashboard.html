@@ -1,0 +1,87 @@
+<!-- templates/investment_dashboard.html -->
+{% extends "admin_base.html" %}
+
+{% block title %}Investment Dashboard{% endblock %}
+
+{% block content %}
+<!-- Flash Messages -->
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+    <div class="alert alert-info">
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    </div>
+{% endif %}
+{% endwith %}
+<div class="container shifted-content">
+    <h2>Investment Dashboard</h2>
+    
+   
+    <div class="button-group">
+        <a href="{{ url_for('investment_category') }}" class="form-button-secondary btn-space">Investment Category</a>
+        <a href="{{ url_for('investment_subcategory') }}" class="form-button-secondary btn-space">Investment Subcategory</a>
+        <a href="{{ url_for('admin_dashboard') }}" class="form-button-secondary btn-space">Admin Dashboard</a>
+    </div>
+
+    <div class="categories mt-4">
+        <h3>Investment Categories</h3>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <!-- <th>ID</th> -->
+                    <th>Category</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for category in categories %}
+                <tr>
+                    <!-- <td>{{ category[0] }}</td> -->
+                    <td>{{ category[1] }}</td>
+                    <td>{{ category[2] }}</td>
+                    <td>
+                        <a href="{{ url_for('update_category', category_id=category[0]) }}" class="form-button-secondary btn-space">Update</a>
+                        <form action="{{ url_for('delete_category', category_id=category[0]) }}" method="POST" style="display:inline;">
+                            <button type="submit" class="form-button-secondary btn-space" onclick="return confirm('Are you sure you want to delete this category?');">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="subcategories mt-4">
+        <h3>Investment Subcategories</h3>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Subcategory</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for subcategory in subcategories %}
+                <tr>
+                    <td>{{ subcategory[2] }}</td>
+                    <td>{{ subcategory[3] }}</td>
+                    <td>
+                        <a href="{{ url_for('update_subcategory', subcategory_id=subcategory[0]) }}" class="form-button-secondary btn-space">Update</a>
+                        <form action="{{ url_for('delete_subcategory', subcategory_id=subcategory[0]) }}" method="POST" style="display:inline;">
+                            <button type="submit" class="form-button-secondary btn-space" onclick="return confirm('Are you sure you want to delete this subcategory?');">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block styles %}
+
+{% endblock %}

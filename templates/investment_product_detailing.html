@@ -1,0 +1,211 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+    <h2>Product Details</h2>
+    <form action="{{ url_for('investment_product_detailing') }}" method="POST">
+        {{ product_form.hidden_tag() }}
+        <div class="form-group">
+            <label for="subcategory">Investment Subcategory:</label>
+            {{ product_form.subcategory(class="form-control") }}
+        </div>
+        <div class="form-group">
+            <label for="product_name">Product Name:</label>
+            {{ product_form.product_name(class="form-control") }}
+        </div>
+        <div class="form-group">
+            <label for="details">Details:</label>
+            {{ product_form.details(class="form-control", rows="4") }}
+        </div>
+        <div class="form-group">
+            <label for="enteredon">Entered On:</label>
+            {{ product_form.enteredon(class="form-control") }}
+        </div>
+        <button type="submit" name="save_product" class="form-button-secondary btn-space green">Save Product Details</button>
+    </form>
+
+    {% if ipid %}
+    <form action="{{ url_for('investment_product_detailing') }}" method="POST" id="expense_revenue_form">
+        <input type="hidden" name="ipid" value="{{ ipid }}">
+
+        <h2>Product Expense</h2>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Serial No.</th>
+                    <th>Expense</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody id="expense_table_body">
+                <tr>
+                    <td>1</td>
+                    <td><select name="expense[]" class="form-control" required>
+                        {% for exp in expenses %}
+                        <option value="{{ exp['id'] }}">{{ exp['detail'] }}</option>
+                        {% endfor %}
+                    </select></td>
+                    <td><input type="number" name="amount[]" class="form-control" step="0.01" required></td>
+                </tr>
+            </tbody>
+        </table>
+        <button type="button" class="form-button-secondary btn-space " onclick="addExpenseRow()">Add Row</button>
+        <div>Total Amount: <span id="total_amount">0.00</span></div>
+
+        <h2>Product Revenue</h2>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Serial No.</th>
+                    <th>Revenue</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody id="revenue_table_body">
+                <tr>
+                    <td>1</td>
+                    <td><select name="revenue[]" class="form-control" required>
+                        {% for rev in revenues %}
+                        <option value="{{ rev['id'] }}">{{ rev['name'] }}</option>
+                        {% endfor %}
+                    </select></td>
+                    <td><input type="number" name="revenue_amount[]" class="form-control" step="0.01" required></td>
+                </tr>
+            </tbody>
+        </table>
+        <button type="button" class="form-button-secondary btn-space" onclick="addRevenueRow()">Add Row</button>
+        <div>Total Revenue: <span id="total_revenue">0.00</span></div>
+        <br>
+        <button type="submit" name="save_expense_revenue" class="form-button-secondary btn-space  green">Submit</button>
+        <button type="button" class="form-button-secondary btn-space red" onclick="clearForm()">Clear</button>
+    </form>
+    <a href="{{ url_for('dashboard') }}"  class="badge-link">Go to Dashboard</a>
+    
+    {% endif %}
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var amount_fields = document.querySelectorAll("input[name='amount[]']");
+        amount_fields.forEach(function (element) {
+            element.addEventListener('input', updateTotalAmount);
+        });
+
+        var revenue_amount_fields = document.querySelectorAll("input[name='revenue_amount[]']");
+        revenue_amount_fields.forEach(function (element) {
+            element.addEventListener('input', updateTotalRevenue);
+        });
+    });
+
+    function addExpenseRow() {
+        var table = document.getElementById("expense_table_body");
+        var row_count = table.rows.length + 1;
+
+        var row = table.insertRow();
+        var cell1 = row.insertCell(0);
+        var cell2 = row.insertCell(1);
+        var cell3 = row.insertCell(2);
+
+        cell1.innerHTML = row_count;
+        cell2.innerHTML = `<select name="expense[]" class="form-control" required>
+                            {% for exp in expenses %}
+                            <option value="{{ exp.id }}">{{ exp.detail }}</option>
+                            {% endfor %}
+                           </select>`;
+        cell3.innerHTML = '<input type="number" name="amount[]" class="form-control" step="0.01" required>';
+
+        var new_amount_field = cell3.querySelector('input');
+        new_amount_field.addEventListener('input', updateTotalAmount);
+
+        updateTotalAmount();
+    }
+
+    function addRevenueRow() {
+        var table = document.getElementById("revenue_table_body");
+        var row_count = table.rows.length + 1;
+
+        var row = table.insertRow();
+        var cell1 = row.insertCell(0);
+        var cell2 = row.insertCell(1);
+        var cell3 = row.insertCell(2);
+
+        cell1.innerHTML = row_count;
+        cell2.innerHTML = `<select name="revenue[]" class="form-control" required>
+                            {% for rev in revenues %}
+                            <option value="{{ rev.id }}">{{ rev.name }}</option>
+                            {% endfor %}
+                           </select>`;
+        cell3.innerHTML = '<input type="number" name="revenue_amount[]" class="form-control" step="0.01" required>';
+
+        var new_revenue_amount_field = cell3.querySelector('input');
+        new_revenue_amount_field.addEventListener('input', updateTotalRevenue);
+
+        updateTotalRevenue();
+    }
+
+    function updateTotalAmount() {
+        var total = 0.0;
+        var amount_fields = document.querySelectorAll("input[name='amount[]']");
+
+        amount_fields.forEach(function (element) {
+            total += parseFloat(element.value) || 0;
+        });
+
+        document.getElementById("total_amount").innerText = total.toFixed(2);
+    }
+
+    function updateTotalRevenue() {
+        var total = 0.0;
+        var revenue_amount_fields = document.querySelectorAll("input[name='revenue_amount[]']");
+
+        revenue_amount_fields.forEach(function (element) {
+            total += parseFloat(element.value) || 0;
+        });
+
+        document.getElementById("total_revenue").innerText = total.toFixed(2);
+    }
+
+    function clearForm() {
+        document.getElementById("expense_table_body").innerHTML = `<tr>
+            <td>1</td>
+            <td><select name="expense[]" class="form-control" required>
+                {% for exp in expenses %}
+                <option value="{{ exp.id }}">{{ exp.detail }}</option>
+                {% endfor %}
+            </select></td>
+            <td><input type="number" name="amount[]" class="form-control" step="0.01" required></td>
+        </tr>`;
+        document.getElementById("total_amount").innerText = '0.00';
+
+        var amount_fields = document.querySelectorAll("input[name='amount[]']");
+        amount_fields.forEach(function (element) {
+            element.addEventListener('input', updateTotalAmount);
+        });
+
+        document.getElementById("revenue_table_body").innerHTML = `<tr>
+            <td>1</td>
+            <td><select name="revenue[]" class="form-control" required>
+                {% for rev in revenues %}
+                <option value="{{ rev.id }}">{{ rev.name }}</option>
+                {% endfor %}
+            </select></td>
+            <td><input type="number" name="revenue_amount[]" class="form-control" step="0.01" required></td>
+        </tr>`;
+        document.getElementById("total_revenue").innerText = '0.00';
+
+        var revenue_amount_fields = document.querySelectorAll("input[name='revenue_amount[]']");
+        revenue_amount_fields.forEach(function (element) {
+            element.addEventListener('input', updateTotalRevenue);
+        });
+    }
+</script>
+{% endblock %}

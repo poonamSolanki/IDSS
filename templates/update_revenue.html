@@ -1,0 +1,31 @@
+{% extends "admin_base.html" %}
+
+{% block title %}
+Update Revenue
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Update Revenue</h1>
+    <form method="POST" action="{{ url_for('update_revenue', revenue_id=form.revenue_id.data) }}">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.subcategory(class="form-control") }}
+            {% for error in form.subcategory.errors %}
+                <span style="color: red;">[{{ error }}]</span><br>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.revenue.label }}<br>
+            {{ form.revenue(size=32) }}<br>
+            {% for error in form.revenue.errors %}
+                <span style="color: red;">[{{ error }}]</span><br>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            <input type="submit" name="action" value="Update" class="form-button-secondary btn-space green">
+            <input type="submit" name="action" value="Clear" class="form-button-secondary btn-space red">
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,44 @@
+<!-- templates/admin_dashboard.html -->
+{% extends "admin_base.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Admin Dashboard</h1>
+     <!-- Flash Messages -->
+     {% with messages = get_flashed_messages() %}
+     {% if messages %}
+         <div class="alert alert-info">
+             {% for message in messages %}
+                 <p>{{ message }}</p>
+             {% endfor %}
+         </div>
+     {% endif %}
+     {% endwith %}
+    <!-- User Table -->
+    <table class="table mt-4">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user[1] }}</td>
+                <td>{{ user[3] }}</td>
+                <td>
+                    <a href="{{ url_for('update', user_id=user[0]) }}" class="form-button-secondary btn-space">Edit</a>
+                    <form action="{{ url_for('delete_user', user_id=user[0]) }}" method="POST" style="display:inline;">
+                        <button type="submit" class="form-button-secondary btn-space" onclick="return confirm('Are you sure you want to delete this user?');">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

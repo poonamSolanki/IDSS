@@ -1,0 +1,37 @@
+{% extends "admin_base.html" %}
+
+{% block title %}
+Revenue Dashboard
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Revenue Dashboard</h1>
+    <a href="{{ url_for('add_revenue') }}" class="form-button-secondary btn-space">Add Revenue</a>
+    <a href="{{ url_for('admin_dashboard') }}" class="form-button-secondary btn-space">Go to Admin Dashboard</a>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Investment Subcategory Name</th>
+                <th>Revenue</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for revenue in revenues %}
+            <tr>
+                <td>{{ revenue[2] }}</td>  <!-- Subcategory Name -->
+                <td>{{ revenue[1] }}</td>  <!-- Revenue -->
+                <td>
+                    <a href="{{ url_for('update_revenue', revenue_id=revenue[0]) }}" class="form-button-secondary btn-space">Edit</a>
+                    <form method="POST" action="{{ url_for('delete_revenue', revenue_id=revenue[0]) }}" style="display: inline;">
+                        <button type="submit" class="form-button-secondary btn-space" onclick="return confirm('Are you sure you want to delete this revenue record?')">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+{% endblock %}

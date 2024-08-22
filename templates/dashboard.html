@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}Investment Dashboard{% endblock %}
+
+{% block content %}
+<div class="container">
+    {% if user %}
+        <p class="welcome-message">Welcome, {{ user[1] }}!</p> 
+    {% else %}
+        <p class="welcome-message">Welcome, Guest!</p>
+    {% endif %}
+    <h2>Investment Dashboard</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Sr. No</th>
+                <th>Category</th>
+                <th>Subcategory</th>
+                <th>Expense Amount</th>
+                <th>Revenue Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ row[0] }}</td>
+                <td>{{ row[1] }}</td>
+                <td>{{ row[2] }}</td>
+                <td>{{ row[3] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <canvas id="expenseRevenueChart" width="400" height="200"></canvas>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var ctx = document.getElementById('expenseRevenueChart').getContext('2d');
+
+        var data = JSON.parse('{{ data | tojson | safe }}');       //here
+        
+        var categories = [...new Set(data.map(item => item[0]))];
+        var subcategories = data.map(item => item[1]);
+        var expenseAmounts = data.map(item => item[2]);
+        var revenueAmounts = data.map(item => item[3]);
+
+        var chartData = {
+            labels: subcategories,
+            datasets: [{
+                label: 'Expense Amount',
+                data: expenseAmounts,
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+            }, {
+                label: 'Revenue Amount',
+                data: revenueAmounts,
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        };
+
+        var chartOptions = {
+            scales: {
+                x: {
+                    beginAtZero: true
+                },
+                y: {
+                    beginAtZero: true
+                }
+            },
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Expenses and Revenues by Subcategory'
+                }
+            }
+        };
+
+        var expenseRevenueChart = new Chart(ctx, {
+            type: 'bar',
+            data: chartData,
+            options: chartOptions
+        });
+    });
+</script>
+{% endblock %}

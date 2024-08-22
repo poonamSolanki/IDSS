@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin Section{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Custom styles -->
+    <style>
+        .sticky-navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background-color: #bfccbb; /* Bootstrap info color */
+        }
+        .sidebar {
+            height: 100vh; /* Full height of viewport */
+            overflow-y: auto; /* Enable vertical scrolling */
+            background-color: #e7ece6; /* Bootstrap light background color */
+            border-right: 1px solid #ddd; /* Sidebar border */
+            padding-top: 15px; /* Top padding for sidebar */
+        }
+        .vertical-panel {
+            display: flex;
+            flex-direction: column;
+            height: 100%; /* Full height of parent */
+        }
+        .nav-link {
+            height: 60px; /* Adjust link height */
+            font-size: 20px; /* Adjust font size */
+            margin: 0; /* Remove margin */
+            display: flex;
+            align-items: center; /* Center items vertically */
+            justify-content: center; /* Center items horizontally */
+        }
+        
+
+        .dropdown-item {
+            font-size: 14px; /* Adjust dropdown item font size */
+        }
+        .content {
+            height: 100vh; /* Full height of viewport */
+            overflow-y: auto; /* Enable vertical scrolling */
+            padding: 20px; /* Padding for content */
+            margin-left: 15px; /* Adjust margin for left spacing */
+            margin-right: 15px; /* Adjust margin for right spacing */
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light  sticky-navbar">
+  <a class="navbar-brand" href="#">InvestmentSupport</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      <li class="nav-item active">
+        <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/register">Register</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/login">Login</a>
+      </li>
+    </ul>
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item">
+        <a class=" logout-btn" href="/logout">Logout</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-lg-2 col-md-3 sidebar">
+            <div class="vertical-panel">
+                <!-- Dashboard -->
+                <div class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Dashboard</a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+                        <a class="dropdown-item" href="{{ url_for('investment_dashboard') }}">Investment</a>
+                        <a class="dropdown-item" href="{{ url_for('expense_dashboard') }}">Expenses</a>
+                        <a class="dropdown-item" href="#">Revenue</a>
+                        <a class="dropdown-item" href="#">Report</a>
+                    </div>
+                </div>
+                
+                <!-- Investment -->
+                <div class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Investment</a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="{{ url_for('investment_dashboard') }}">Investment Dashboard</a>
+                        <a class="dropdown-item" href="{{ url_for('investment_category') }}">Investment Category</a>
+                        <a class="dropdown-item" href="{{ url_for('investment_subcategory') }}">Investment Subcategory</a>
+                    </div>
+                </div>
+                
+                <!-- Expenses -->
+                <div class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Expenses</a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="{{ url_for('expense_dashboard') }}">Expense Dashboard</a>
+                        <a class="dropdown-item" href="{{ url_for('add_expense_type') }}">Add Expense Type</a>
+                        <a class="dropdown-item" href="{{ url_for('add_expense_factors') }}">Add Expense Factor</a>
+                        <a class="dropdown-item" href="{{ url_for('add_expense') }}">Add Expenses</a>
+                    </div>
+                </div>
+
+                
+                
+                <!-- Revenue -->
+                <div class="nav-item dropdown">
+                    <a href="{{ url_for('revenue_dashboard') }}" class="nav-link dropdown-toggle" data-toggle="dropdown">Revenue</a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="{{ url_for('revenue_dashboard') }}">Revenue Dasboard</a>
+                        <a class="dropdown-item" href="{{ url_for('add_revenue') }}">Add Revenue</a>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        
+        <!-- Content -->
+        <div class="col-lg-10 col-md-9">
+            <div class="content">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>
